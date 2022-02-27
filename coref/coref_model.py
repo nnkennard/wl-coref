@@ -440,7 +440,7 @@ class CorefModel:  # pylint: disable=too-many-instance-attributes
             basename = os.path.basename(path)
             model_name = self.config.bert_model.replace("/", "_")
             cache_filename = f"{model_name}_{basename}.pickle"
-            if os.path.exists(cache_filename):
+            if False and os.path.exists(cache_filename):
                 with open(cache_filename, mode="rb") as cache_f:
                     self._docs[path] = pickle.load(cache_f)
             else:

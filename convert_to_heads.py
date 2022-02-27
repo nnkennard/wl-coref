@@ -6,8 +6,11 @@ from typing import Tuple
 import jsonlines
 
 
-DATA_DIR = "data"
+#DATA_DIR = "data"
+DATA_DIR = "litbank_data"
 FILENAME = "english_{}{}.jsonlines"
+
+
 LOGGING_LEVEL = logging.WARNING  # DEBUG to output all duplicate spans
 SPLITS = ("development", "test", "train")
 
@@ -39,6 +42,8 @@ if __name__ == "__main__":
     logging.basicConfig(level=LOGGING_LEVEL)
     path = os.path.join(DATA_DIR, FILENAME)
     for split in SPLITS:
+        if not split == 'test':
+          continue
         with jsonlines.open(path.format(split, ""), mode="r") as inf:
             with jsonlines.open(path.format(split, "_head"), mode="w") as outf:
                 deleted_spans = 0
@@ -50,7 +55,6 @@ if __name__ == "__main__":
 
                     total_spans += sum(len(cluster) for cluster in doc["clusters"])
                     total_clusters += len(doc["clusters"])
-
                     head_clusters = [
                         [get_head(mention, doc) for mention in cluster]
                         for cluster in doc["clusters"]

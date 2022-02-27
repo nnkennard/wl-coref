@@ -26,6 +26,9 @@ class ClusterChecker:
         Returns:
             LEA score for the document as a tuple of (f1, precision, recall)
         """
+        print(len(gold_clusters))
+        print(len(pred_clusters))
+        print("*" * 80)
         recall, r_weight = ClusterChecker._lea(gold_clusters, pred_clusters)
         precision, p_weight = ClusterChecker._lea(pred_clusters, gold_clusters)
 

@@ -38,17 +38,17 @@ fi
 
 cd $downloads_dir
 
-curl -O https://cemantix.org/conll/2012/download/conll-2012-train.v4.tar.gz
-curl -O https://cemantix.org/conll/2012/download/conll-2012-development.v4.tar.gz
-curl -O https://cemantix.org/conll/2012/download/test/conll-2012-test-official.v9.tar.gz
-curl -O https://cemantix.org/conll/2012/download/test/conll-2012-test-supplementary.v9.tar.gz
-curl -O https://cemantix.org/conll/2012/download/test/conll-2012-test-key.tar.gz
-curl -O https://cemantix.org/conll/2012/download/conll-2012-scripts.v3.tar.gz
+#curl -O https://cemantix.org/conll/2012/download/conll-2012-train.v4.tar.gz
+#curl -O https://cemantix.org/conll/2012/download/conll-2012-development.v4.tar.gz
+#curl -O https://cemantix.org/conll/2012/download/test/conll-2012-test-official.v9.tar.gz
+#curl -O https://cemantix.org/conll/2012/download/test/conll-2012-test-supplementary.v9.tar.gz
+#curl -O https://cemantix.org/conll/2012/download/test/conll-2012-test-key.tar.gz
+#curl -O https://cemantix.org/conll/2012/download/conll-2012-scripts.v3.tar.gz
 
 cd $original_dir
 
-for filename in $downloads_dir/conll-2012*.tar.gz; do
-    tar -xvzf $filename -C $data_dir
-done
+#for filename in $downloads_dir/conll-2012*.tar; do
+#    tar -xvf $filename -C $data_dir
+#done
 
 $data_dir/conll-2012/v3/scripts/skeleton2conll.sh -D $ontonotes_dir $data_dir/conll-2012
