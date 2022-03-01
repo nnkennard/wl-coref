@@ -51,6 +51,7 @@ class CorefModel:  # pylint: disable=too-many-instance-attributes
     def __init__(self,
                  config_path: str,
                  section: str,
+                 dataset: str,
                  epochs_trained: int = 0):
         """
         A newly created model is set to evaluation mode.
@@ -62,6 +63,8 @@ class CorefModel:  # pylint: disable=too-many-instance-attributes
                 (useful for warm start)
         """
         self.config = CorefModel._load_config(config_path, section)
+        self.dataset = dataset
+        self.train_data = f"newdata/{dataset}/english_train_head.jsonlines"
         self.epochs_trained = epochs_trained
         self._docs: Dict[str, List[Doc]] = {}
         self._build_model()
@@ -268,7 +271,7 @@ class CorefModel:  # pylint: disable=too-many-instance-attributes
 
         time = datetime.strftime(datetime.now(), "%Y.%m.%d_%H.%M")
         path = os.path.join(self.config.data_dir,
-                            f"{self.config.section}"
+                            f"{self.config.section}_{self.dataset}"
                             f"_(e{self.epochs_trained}_{time}).pt")
         savedict = {name: module.state_dict() for name, module in to_save}
         savedict["epochs_trained"] = self.epochs_trained  # type: ignore
@@ -278,7 +281,7 @@ class CorefModel:  # pylint: disable=too-many-instance-attributes
         """
         Trains all the trainable blocks in the model using the config provided.
         """
-        docs = list(self._get_docs(self.config.train_data))
+        docs = list(self._get_docs(self.train_data))
         docs_ids = list(range(len(docs)))
         avg_spans = sum(len(doc["head2span"]) for doc in docs) / len(docs)
 
@@ -376,7 +379,7 @@ class CorefModel:  # pylint: disable=too-many-instance-attributes
         }
 
     def _build_optimizers(self):
-        n_docs = len(self._get_docs(self.config.train_data))
+        n_docs = len(self._get_docs(self.train_data))
         self.optimizers: Dict[str, torch.optim.Optimizer] = {}
         self.schedulers: Dict[str, torch.optim.lr_scheduler.LambdaLR] = {}
 
@@ -436,6 +439,10 @@ class CorefModel:  # pylint: disable=too-many-instance-attributes
         return sorted(clusters)
 
     def _get_docs(self, path: str) -> List[Doc]:
+        print("Paths already in self._docs")
+        print(self._docs.keys())
+        print("New path")
+        print(path)
         if path not in self._docs:
             basename = os.path.basename(path)
             model_name = self.config.bert_model.replace("/", "_")
